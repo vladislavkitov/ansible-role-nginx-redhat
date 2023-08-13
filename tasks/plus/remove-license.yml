@@ -1,0 +1,13 @@
+---
+- name: Set NGINX Plus license state to absent
+  ansible.builtin.set_fact:
+    nginx_license_status: absent
+
+- name: (Red Hat) Delete NGINX Plus license
+  ansible.builtin.file:
+    path: /etc/ssl/nginx
+    state: absent
+  when: ansible_facts['distribution'] != 'Alpine'
+
+- name: Remove NGINX Plus repository data
+  ansible.builtin.include_tasks: "{{ role_path }}/tasks/plus/install-{{ ansible_facts['os_family'] | lower }}.yml"

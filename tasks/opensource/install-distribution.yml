@@ -1,0 +1,21 @@
+---
+- name: (RHEL 7) Set up the EPEL repository
+  when:
+    - ansible_facts['distribution'] in ['RedHat']
+    - ansible_facts['distribution_major_version'] is version('7', '==')
+    - nginx_install_epel_release | bool
+  block:
+    - name: (RHEL 7) Import the EPEL repository GPG key
+      ansible.builtin.rpm_key:
+        state: present
+        key: https://dl.fedoraproject.org/pub/epel/RPM-GPG-KEY-EPEL-{{ ((ansible_facts['distribution'] == 'Amazon') | ternary('7', ansible_facts['distribution_major_version'])) }}
+
+    - name: (RHEL 7) Install the EPEL repository
+      ansible.builtin.yum:
+        name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-{{ ((ansible_facts['distribution'] == 'Amazon') | ternary('7', ansible_facts['distribution_major_version'])) }}.noarch.rpm
+
+- name: "{{ nginx_setup | capitalize }} NGINX from the distribution's package repository"
+  ansible.builtin.package:
+    name: nginx{{ nginx_version | default('') }}
+    state: "{{ nginx_state }}"
+  notify: (Handler) Run NGINX
