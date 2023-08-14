@@ -44,20 +44,8 @@ nginx_default_repository_redhat: https://nginx.org/packages/{{ (nginx_branch == 
 # Default NGINX Plus repositories
 nginx_plus_default_repository_redhat: https://pkgs.nginx.com/plus/{{ (ansible_facts['distribution'] == 'CentOS') | ternary('centos', 'rhel') }}/{{ (ansible_facts['distribution_version'] is version('7.4', '>=') and ansible_facts['distribution_version'] is version('8', '<')) | ternary('7.4', ansible_facts['distribution_major_version']) }}/$basearch/
 
-# Alpine dependencies
-nginx_alpine_dependencies: [ca-certificates, coreutils, openssl, pcre2]
-
-# Debian dependencies
-nginx_debian_dependencies: [apt-transport-https, ca-certificates, gpg-agent]
-
-# FreeBSD dependencies
-nginx_freebsd_dependencies: [security/ca_root_nss]
-
 # Red Hat dependencies
 nginx_redhat_dependencies: [ca-certificates]
-
-# SLES dependencies
-nginx_sles_dependencies: [ca-certificates]
 
 # Default locations and versions when 'nginx_install_from' is set to 'source'.
 # Set 'pcre_release' to 1 to install PCRE 1, modify the 'openssl_version' to move back to 1.1.1.
